@@ -1,4 +1,5 @@
 import streamlit as st
+import mysql.connector
 
 from streamlit_option_menu import option_menu
 
@@ -9,6 +10,17 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="expanded",
 )
+
+
+# connection = mysql.connector.connect(
+#                 host="localhost",
+#                 user="",
+#                 password="",
+#                 database="shelfie"
+#             )
+
+# mycursor = connection.cursor()
+# st.warning("Connected to the database successfully!")
 
 
 class MultiApp:
@@ -23,7 +35,7 @@ class MultiApp:
     def run():
 
         with st.sidebar:
-            st.title("Shelfie")
+            #st.title("Shelfie")
             app = option_menu(
                 menu_title='Shelfie',
                 options=["Home", "Account", "About"],
@@ -37,10 +49,13 @@ class MultiApp:
                     "nav-link-selected": {"background-color": "#02ab21"},}
                 )
             
-            if app == "Home":
-                home.app()
-            if app == "Account":
-                account.app()
-            if app == "About":
-                about.app()
+        if app == "Home":
+            home.app()
+        if app == "Account":
+            account.app()
+        if app == "About":
+            about.app()
+    
+    
+    run()
             
