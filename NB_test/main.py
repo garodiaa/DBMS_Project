@@ -35,9 +35,9 @@ class MultiApp:
     def run():
 
         with st.sidebar:
-            #st.title("Shelfie")
+            #st.title("")
             app = option_menu(
-                menu_title='Shelfie',
+                menu_title='SyncNotice',
                 options=["Home", "Account", "About"],
                 icons=["🏠", "👤", "📚"],
                 menu_icon="📚",
