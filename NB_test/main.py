@@ -14,9 +14,9 @@ st.set_page_config(
 
 # connection = mysql.connector.connect(
 #                 host="localhost",
-#                 user="",
+#                 user="root",
 #                 password="",
-#                 database="shelfie"
+#                 database="noticedb"
 #             )
 
 # mycursor = connection.cursor()
