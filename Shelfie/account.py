@@ -6,7 +6,7 @@ def connect_to_db():
                     host="localhost",
                     user="root",
                     password="",
-                    database="noticedb"
+                    database="shelfiedb"
                 )
     # st.success("Connected to the database successfully!")
     return connection
@@ -15,39 +15,39 @@ def app():
     st.title("Account 👤")
  
 
-    if 'student_id' not in st.session_state:
-        st.session_state.student_id = ''
+    if 'username' not in st.session_state:
+        st.session_state.username = ''
     if 'password' not in st.session_state:
         st.session_state.password = ''
     if 'name' not in st.session_state:
         st.session_state.name = ''
 
   
-    def login(student_id, password):
+    def login(username, password):
         connection = connect_to_db()
         try:
             mycursor = connection.cursor()
-            mycursor.execute("""SELECT name FROM students WHERE student_id = %s AND password = %s""", (student_id,password))
+            mycursor.execute("""SELECT name FROM accounts WHERE username = %s AND password = %s""", (username,password))
             result = mycursor.fetchone()
             if result:
                 st.success(f"Logged in successfully! Welcome, {result[0]}")
-                st.session_state.student_id = student_id
+                st.session_state.username = username
                 st.session_state.password = password
                 st.session_state.name = result[0]
                 st.session_state.signed_out = True
                 st.session_state.sign_out = True
 
             else:
-                st.error("Invalid Student ID or Password")
+                st.error("Invalid Username or Password")
 
         finally:
             connection.close()
     
-    def create_account(student_id, password):
+    def create_account(username, password):
         connection = connect_to_db()
         try:
             mycursor = connection.cursor()
-            mycursor.execute("""INSERT INTO students (student_id, password) VALUES (%s, %s)""", (student_id, password))
+            mycursor.execute("""INSERT INTO accounts (username, password) VALUES (%s, %s)""", (username, password))
             connection.commit()
             st.success("Account created successfully")
             st.write("You can now login to your account")
@@ -60,7 +60,7 @@ def app():
     def sign_out():
         st.session_state.signed_out = False
         st.session_state.sign_out = False
-        st.session_state.student_id = ''
+        st.session_state.username = ''
         st.session_state.password = ''
         # st.success("Signed out successfully")
 
@@ -74,7 +74,7 @@ def app():
     # if user is not logged in then the options will show to login or signup
     if not st.session_state.signed_out:
         choice = st.selectbox('Login/Signup', ['Login', 'Signup'])
-        student_id = st.text_input("Student ID")
+        username = st.text_input("Username")
         password = st.text_input("Password")
 
 
@@ -87,14 +87,14 @@ def app():
                 st.write("Passwords do not match")
             else:
                 if st.button("Signup"):
-                    create_account(student_id, password)
+                    create_account(username, password)
         # that is log in
         else:
             if st.button("Login"):
-                login(student_id, password)
-            # st.button('Login',on_click=login(student_id, password))
+                login(username, password)
+            # st.button('Login',on_click=login(username, password))
             
     if st.session_state.sign_out:
-        st.text('ID ' + st.session_state.student_id)
+        st.text('ID ' + st.session_state.username)
         st.text('Name: ' + st.session_state.name)
         st.button('Sign out', on_click=sign_out)
