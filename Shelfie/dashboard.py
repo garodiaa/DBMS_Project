@@ -1,6 +1,7 @@
 import streamlit as st
 import mysql.connector
 import account
+import pandas as pd
 
 
 def connect_to_db():
@@ -153,7 +154,7 @@ def app():
             books = search_books(search_query, search_by)
             if books:
                 st.write("Search Results:")
-                st.table(books)
+                st.table(pd.DataFrame(books, columns=["ID", "Title", "Author", "Genre", "Publication Year", "Description","Date Added"]))
             else:
                 st.write("No books found.")
 
