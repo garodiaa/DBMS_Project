@@ -13,21 +13,21 @@ def connect_to_db():
 
 def app():
     st.title("Account 👤")
- 
 
+    if 'user_id' not in st.session_state:
+        st.session_state.user_id = ''
     if 'username' not in st.session_state:
         st.session_state.username = ''
     if 'password' not in st.session_state:
         st.session_state.password = ''
-    if 'name' not in st.session_state:
-        st.session_state.name = ''
+
 
   
     def login(username, password):
         connection = connect_to_db()
         try:
             mycursor = connection.cursor()
-            mycursor.execute("""SELECT name FROM accounts WHERE username = %s AND password = %s""", (username,password))
+            mycursor.execute("""SELECT username FROM users WHERE username = %s AND password = %s""", (username,password))
             result = mycursor.fetchone()
             if result:
                 st.success(f"Logged in successfully! Welcome, {result[0]}")
@@ -47,7 +47,7 @@ def app():
         connection = connect_to_db()
         try:
             mycursor = connection.cursor()
-            mycursor.execute("""INSERT INTO accounts (username, password) VALUES (%s, %s)""", (username, password))
+            mycursor.execute("""INSERT INTO users (username, password) VALUES (%s, %s)""", (username, password))
             connection.commit()
             st.success("Account created successfully")
             st.write("You can now login to your account")
@@ -95,6 +95,6 @@ def app():
             # st.button('Login',on_click=login(username, password))
             
     if st.session_state.sign_out:
-        st.text('ID ' + st.session_state.username)
-        st.text('Name: ' + st.session_state.name)
+        # st.text('User ID ' + st.session_state.user_id)
+        st.text('Username: ' + st.session_state.username)
         st.button('Sign out', on_click=sign_out)

@@ -3,7 +3,7 @@ import mysql.connector
 
 from streamlit_option_menu import option_menu
 
-import about,account,home
+import about,account,home,dashboard
 st.set_page_config(
     page_title="Shelfie",
     page_icon="📚",
@@ -37,9 +37,9 @@ class MultiApp:
         with st.sidebar:
             #st.title("")
             app = option_menu(
-                menu_title='SyncNotice',
-                options=["Home", "Account", "About"],
-                icons=["🏠", "👤", "📚"],
+                menu_title='Shelfie',
+                options=["Home", "Account", "Dashboard", "About"],
+                icons=["🏠", "👤","📚", "📚"],
                 menu_icon="📚",
                 default_index=1,
                 styles={
@@ -53,6 +53,8 @@ class MultiApp:
             home.app()
         if app == "Account":
             account.app()
+        if app == "Dashboard":
+            dashboard.app()
         if app == "About":
             about.app()
     
