@@ -60,26 +60,35 @@ def app():
         finally:
             connection.close()
 
-    search_query = st.text_input("Search for a book:")
-    if search_query:
-        books = search_books(search_query)
-        if books:
-            for book in books:
-                st.write(f"Title: {book[1]}, Author: {book[2]}")
-        else:
-            st.write("No books found.")
+    if 'add_book' not in st.session_state:
+        st.session_state.add_book = False
+    if 'update_book' not in st.session_state:
+        st.session_state.update_book = False
+    if 'remove_book' not in st.session_state:
+        st.session_state.remove_book = False
 
     if st.button("Add Book"):
+        st.session_state.add_book = True
+        st.session_state.update_book = False
+        st.session_state.remove_book = False
+
+    if st.session_state.add_book:
         title = st.text_input("Enter book title:")
         author = st.text_input("Enter book author:")
         genre = st.text_input("Enter book genre:")
         publication_year = st.text_input("Enter book publication year:")
         description = st.text_input("Enter book description:")
         if st.button("Submit"):
-            add_book(title, author, genre, publication_year, description)   
+            add_book(title, author, genre, publication_year, description)
             st.success("Book added successfully!")
+            st.session_state.add_book = False
 
     if st.button("Update Book"):
+        st.session_state.update_book = True
+        st.session_state.add_book = False
+        st.session_state.remove_book = False
+
+    if st.session_state.update_book:
         update_query = st.text_input("Search for a book to update:")
         if update_query:
             books = search_books(update_query)
@@ -89,22 +98,32 @@ def app():
                     if st.button(f"Update {book[1]}"):
                         new_title = st.text_input("Enter new title:", value=book[1])
                         new_author = st.text_input("Enter new author:", value=book[2])
+                        new_genre = st.text_input("Enter new genre:", value=book[3])
+                        new_publication_year = st.text_input("Enter new publication year:", value=book[4])
+                        new_description = st.text_input("Enter new description:", value=book[5])
                         if st.button("Submit"):
-                            update_book(book[0], new_title, new_author)
+                            update_book(book[0], new_title, new_author, new_genre, new_publication_year, new_description)
                             st.success("Book updated successfully!")
+                            st.session_state.update_book = False
             else:
                 st.write("No books found.")
 
     if st.button("Remove Book"):
+        st.session_state.remove_book = True
+        st.session_state.add_book = False
+        st.session_state.update_book = False
+
+    if st.session_state.remove_book:
         remove_query = st.text_input("Search for a book to remove:")
         if remove_query:
             books = search_books(remove_query)
             if books:
                 for book in books:
                     st.write(f"Book ID: {book[0]}, Title: {book[1]}, Author: {book[2]}, Genre: {book[3]}, Publication Year: {book[4]}, Description: {book[5]}")
-                    if st.button(f"Remove {book[1]}"):
+                    if st.button(f"Remove '{book[1]}'"):
                         remove_book(book[0])
                         st.success("Book removed successfully!")
+                        st.session_state.remove_book = False
             else:
                 st.write("No books found.")
 
